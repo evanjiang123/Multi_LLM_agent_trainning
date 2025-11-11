@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH --account=def-rrabba
+#SBATCH --gres=gpu:a100:1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=40G
+#SBATCH --time=06:00:00
+#SBATCH --job-name=cluster-lora
+#SBATCH --output=%x-%j.out
+
+module load python/3.11
+module load gcc/12.3 arrow/21.0.0
+source ~/envs/llm-train/bin/activate
+
+export HF_HOME=$SCRATCH/Multi_LLM_agent_trainning/.cache/huggingface
+export HF_DATASETS_CACHE=$HF_HOME/datasets
+
+cd $SCRATCH/Multi_LLM_agent_trainning/agent-trainning
+accelerate launch train_persona_lora.py \
+  --cluster-id ${CLUSTER_ID} \
+  --output-dir $SCRATCH/Multi_LLM_agent_trainning/qwen_loras/cluster_${CLUSTER_ID} \
+  --num-epochs 3 \
+  --packing
