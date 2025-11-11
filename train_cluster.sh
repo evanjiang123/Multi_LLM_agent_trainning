@@ -14,7 +14,7 @@ source ~/envs/llm-train/bin/activate
 export HF_HOME=$SCRATCH/Multi_LLM_agent_trainning/.cache/huggingface
 export HF_DATASETS_CACHE=$HF_HOME/datasets
 
-cd /home/evan1/projects/def-rrabba/evan1/multi-llm-sim/Multi_LLM_agent_trainning/agent-trainning
+cd /home/evan1/projects/def-rrabba/evan1/multi-llm-sim/Multi_LLM_agent_trainning
 accelerate launch train_persona_lora.py \
   --cluster-id ${CLUSTER_ID} \
   --output-dir $SCRATCH/Multi_LLM_agent_trainning/qwen_loras/cluster_${CLUSTER_ID} \
