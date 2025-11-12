@@ -13,6 +13,8 @@ source ~/envs/llm-train/bin/activate
 
 export HF_HOME=$SCRATCH/Multi_LLM_agent_trainning/.cache/huggingface
 export HF_DATASETS_CACHE=$HF_HOME/datasets
+export HF_DATASETS_OFFLINE=1
+export HF_HUB_OFFLINE=1
 
 cd /home/evan1/projects/def-rrabba/evan1/multi-llm-sim/Multi_LLM_agent_trainning
 accelerate launch train_persona_lora.py \
