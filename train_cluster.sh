@@ -19,6 +19,7 @@ export HF_HUB_OFFLINE=1
 cd /home/evan1/projects/def-rrabba/evan1/multi-llm-sim/Multi_LLM_agent_trainning
 accelerate launch train_persona_lora.py \
   --cluster-id ${CLUSTER_ID} \
+  --cluster-file ${CLUSTER_FILE} \
   --output-dir $SCRATCH/Multi_LLM_agent_trainning/qwen_loras/cluster_${CLUSTER_ID} \
   --num-epochs 3 \
   --packing
