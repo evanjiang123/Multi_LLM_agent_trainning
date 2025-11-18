@@ -101,6 +101,8 @@ def load_blueprint_cluster(cluster_id: int, cluster_file: Path | None = None) ->
 ]:
     """Loads the BluePrint dataset, optionally from a local file."""
     if cluster_file is not None:
+        if cluster_file.is_dir():
+            raise ValueError("cluster_file should point to a JSONL file, not a folder.")
         return load_local_cluster(cluster_id, cluster_file)
 
     dataset = load_dataset("ComplexDataLab/BluePrint", "25_clusters", split="full")
