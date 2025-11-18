@@ -18,7 +18,7 @@ export HF_DATASETS_CACHE=$HF_HOME/datasets
 export HF_DATASETS_OFFLINE=1
 export HF_HUB_OFFLINE=1
 
-cd /home/evan1/projects/def-rrabba/evan1/multi-llm-sim/Multi_LLM_agent_trainning
+cd /home/evan1/projects/def-rrabba/evan1/multi-llm-sim/agent_trainning
 accelerate launch train_persona_lora.py \
   --cluster-id ${CLUSTER_ID} \
   --cluster-file ${CLUSTER_FILE} \
