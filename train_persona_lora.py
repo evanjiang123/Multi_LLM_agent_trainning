@@ -143,11 +143,11 @@ def format_thread(thread: List[Dict[str, Any]], cluster_id: int) -> str:
 
 def build_text_dataset(dataset: Dataset, cluster_id: int) -> Dataset:
     LOGGER.info("Formatting %d threads into text", len(dataset))
-formatted = dataset.map(
-    lambda row: {"text": format_thread(row["thread"], cluster_id)},
-    remove_columns=dataset.column_names,
-    num_proc=1,
-)
+    formatted = dataset.map(
+        lambda row: {"text": format_thread(row["thread"], cluster_id)},
+        remove_columns=dataset.column_names,
+        num_proc=1,
+    )
     return formatted
 
 
