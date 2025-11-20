@@ -19,6 +19,8 @@ import json
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+import faulthandler
+faulthandler.enable()
 
 from datasets import Dataset, load_dataset
 from peft import LoraConfig, get_peft_model
@@ -217,8 +219,7 @@ def main() -> None:
         lr_scheduler_type="cosine",
         warmup_ratio=0.03,
         logging_steps=10,
-        eval_strategy="steps",
-        eval_steps=100,
+        evaluation_strategy="no",
         save_steps=200,
         save_total_limit=3,
         bf16=use_cuda,
@@ -243,4 +244,14 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    import traceback
+    try:
+        main()
+    except Exception as e:
+        LOGGER.exception("Fatal error in train_persona_lora", exc_info=e)
+        # Also dump to stderr explicitly
+        traceback.print_exc()
+        sys.stderr.flush()
+        sys.stdout.flush()
+        raise
+

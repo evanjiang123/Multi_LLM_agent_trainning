@@ -14,24 +14,38 @@ module load python/3.11
 module load gcc/12.3 arrow/21.0.0
 source ~/envs/llm-train/bin/activate
 
-export HF_HOME=/home/evan1/scratch/Multi_LLM_agent_trainning/.cache/huggingface
-export HF_DATASETS_CACHE=$HF_HOME/datasets
-export HF_DATASETS_OFFLINE=1
-export HF_HUB_OFFLINE=1
+###############################################
+# 1. Put ALL HF caches on SCRATCH (only these!)
+###############################################
+export HF_HOME=$SCRATCH/hf_home
+export HF_DATASETS_CACHE=$SCRATCH/hf_datasets
+export TRANSFORMERS_CACHE=$SCRATCH/hf_models
+mkdir -p $HF_HOME $HF_DATASETS_CACHE $TRANSFORMERS_CACHE
 
+# DO NOT USE OFFLINE MODE (it breaks model loading)
+unset HF_DATASETS_OFFLINE
+unset HF_HUB_OFFLINE
+
+###############################################
+# 2. Set local scratch directories
+###############################################
 LOCAL_ROOT=${SLURM_TMPDIR}
 LOCAL_MODEL=$LOCAL_ROOT/Qwen2.5-7B-Instruct
 LOCAL_CLUSTER_FILE=$LOCAL_ROOT/cluster_${CLUSTER_ID}.jsonl
 LOCAL_OUTPUT=$LOCAL_ROOT/qwen_loras/cluster_${CLUSTER_ID}
+
 mkdir -p $LOCAL_ROOT/qwen_loras
 
 echo "Copying Qwen checkpoint to local scratch..."
-mkdir -p $LOCAL_ROOT
 cp -r /home/evan1/scratch/Multi_LLM_agent_trainning/.cache/huggingface/Qwen2.5-7B-Instruct $LOCAL_MODEL
 cp ${CLUSTER_FILE} $LOCAL_CLUSTER_FILE
 
+###############################################
+# 3. Run training
+###############################################
 cd /home/evan1/projects/def-rrabba/evan1/multi-llm-sim/agent_trainning
-accelerate launch train_persona_lora.py \
+
+python -u train_persona_lora.py \
   --base-model $LOCAL_MODEL \
   --cluster-id ${CLUSTER_ID} \
   --cluster-file $LOCAL_CLUSTER_FILE \
@@ -39,6 +53,9 @@ accelerate launch train_persona_lora.py \
   --num-epochs 3 \
   --packing
 
+###############################################
+# 4. Save results back to scratch
+###############################################
 RESULT_DIR=/home/evan1/scratch/Multi_LLM_agent_trainning/qwen_loras/cluster_${CLUSTER_ID}
 mkdir -p $RESULT_DIR
 cp -r $LOCAL_OUTPUT/* $RESULT_DIR/
