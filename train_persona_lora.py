@@ -287,12 +287,10 @@ def main() -> None:
     LOGGER.info("Initializing SFTTrainer...")
     trainer = SFTTrainer(
         model=model,
-        processing_class=tokenizer,          # more standard than processing_class
+        processing_class=tokenizer,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
         args=training_args,
-        packing=args.packing,
-        dataset_num_proc=args.dataset_num_proc,
     )
 
     LOGGER.info("Starting training for cluster %s...", args.cluster_id)
