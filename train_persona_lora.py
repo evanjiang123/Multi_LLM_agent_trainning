@@ -273,7 +273,6 @@ def main() -> None:
         lr_scheduler_type="cosine",
         warmup_ratio=0.03,
         logging_steps=10,
-        evaluation_strategy="no",
         save_steps=200,
         save_total_limit=3,
         bf16=use_cuda,          # OK on A100/A40; will be ignored if unsupported
