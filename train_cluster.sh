@@ -36,8 +36,8 @@ LOCAL_OUTPUT=$LOCAL_ROOT/qwen_loras/cluster_${CLUSTER_ID}
 
 mkdir -p $LOCAL_ROOT/qwen_loras
 
-echo "Copying Qwen checkpoint to local scratch..."
-cp -r /home/evan1/scratch/Multi_LLM_agent_trainning/.cache/huggingface/Qwen2.5-7B-Instruct $LOCAL_MODEL
+echo "Extracting Qwen checkpoint tarball to local scratch..."
+tar -xf /home/evan1/scratch/Multi_LLM_agent_trainning/.cache/huggingface/Qwen2.5-7B-Instruct.tar -C $LOCAL_ROOT
 cp ${CLUSTER_FILE} $LOCAL_CLUSTER_FILE
 
 ###############################################
