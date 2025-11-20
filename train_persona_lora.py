@@ -291,7 +291,6 @@ def main() -> None:
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
         args=training_args,
-        max_seq_length=args.max_seq_len,
         packing=args.packing,
         dataset_num_proc=args.dataset_num_proc,
     )
