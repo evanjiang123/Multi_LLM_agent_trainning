@@ -22,7 +22,8 @@ from typing import Any, Dict, List, Tuple
 
 import faulthandler
 faulthandler.enable()
-faulthandler.dump_traceback_later(600, repeat=True)  # periodic safety dump
+# Don't set timeout - let SLURM handle job timeouts
+# faulthandler.dump_traceback_later(600, repeat=True)
 
 from datasets import Dataset, load_dataset
 from peft import LoraConfig, get_peft_model
@@ -129,6 +130,13 @@ def load_local_cluster(cluster_id: int, cluster_path: Path) -> Tuple[Dataset, Da
         )
 
     LOGGER.info("Local cluster threads: %d", len(dataset))
+
+    # Cap at 30k like Aurélien's working version
+    MAX_SAMPLES = 30000
+    if len(dataset) > MAX_SAMPLES:
+        LOGGER.info("Subsampling from %d to %d examples", len(dataset), MAX_SAMPLES)
+        dataset = dataset.shuffle(seed=1234).select(range(MAX_SAMPLES))
+
     split = dataset.train_test_split(test_size=0.01, seed=1234)
     eval_split = split["test"]
     if len(eval_split) > 5000:
